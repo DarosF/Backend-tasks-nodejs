@@ -3,18 +3,18 @@ const moment = require('moment')
 module.exports = app => {
     const getTasks = (req, res) => {
         const date = req.query.date ? req.query.date
-            : moment().endOf('day').toDate()
+            : moment().endOf('day').toDate() //pega o final do dia
 
         app.db('tasks')
             .where({ userId: req.user.id })
             .where('estimateAt', '<=', date)
-        orderBy('estimateAt')
-            .then(tasks => res.json(tasks))
+            .orderBy('estimateAt')
+            .then(tasks => res.json(tasks))//converte para json e manda para a requisicao
             .catch(err => res.status(400).json(err))
     }
 
-    const save = (req, res) => {
-        if (!req.body.desc) {
+    const save = (req, res) => { //método
+        if (!req.body.desc.trim()) {//se a descricao nao estiver presente
             return res.status(400).send('Description is required...')
         }
 
@@ -28,7 +28,7 @@ module.exports = app => {
 
     const remove = (req, res) => {
         app.db('tasks')
-            .where({ id: req.params.id, userId: req.user.id })
+            .where({ id: req.params.id, userId: req.user.id }) //faz a exclusao do usuario que esta no request ou logado no momento.
             .del()
             .then(rowsDeleted => {
                 if (rowsDeleted > 0) {

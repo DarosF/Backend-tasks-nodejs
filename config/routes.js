@@ -9,7 +9,7 @@ module.exports = app => {
     app.route('/tasks/:id') //:id refere-se aos params (parametros) do id
         .all(app.config.passport.authenticate())
         .delete(app.api.task.remove)
-    app.route('/tasksToggle/:id')
+    app.route('/tasks/:id/toggle')
         .all(app.config.passport.authenticate())
-        .put(app.api.task.toggleTask)
+        .put(app.api.task.toggleTask) //.put para alterar uma task
 }
