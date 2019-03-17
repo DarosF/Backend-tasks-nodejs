@@ -3,13 +3,13 @@ const jwt = require('jwt-simple')
 const bcrypt = require('bcrypt-nodejs')
 
 module.exports = app => {
-    const signin = async (req, res) => {
+    const signin = async (req, res) => { //login
         if (!req.body.email || !req.body.password) {
             return res.status(400).send('Imcomplete Datas')
         }
 
         const user = await app.db('users')
-            .where({ email: req.body.email })
+            .whereRaw("LOWER(email) = LOWER(?)", req.body.email) //para ignorar letrar maisculas ou minusculas no momento do login...
             .first()
 
         if (user) {
